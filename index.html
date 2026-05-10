@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>PRISM Dual Action YouTube Icon</title>
+
+    <style>
+      body {
+        margin: 0;
+        background: #0f1115;
+        color: #f2f2f2;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        padding: 40px 20px;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+      }
+
+      .header {
+        margin-bottom: 24px;
+      }
+
+      .title {
+        font-size: 32px;
+        font-weight: bold;
+        line-height: 1.4;
+      }
+
+      .subtitle {
+        color: #b5b5b5;
+        margin-top: 8px;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 24px;
+      }
+
+      /* 左播放器 */
+      .player-box {
+        background: #1a1d24;
+        border-radius: 16px;
+        padding: 16px;
+      }
+
+      #player {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: 12px;
+      }
+
+      .now-playing {
+        margin-top: 12px;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      /* 提示文字 */
+      .notice {
+        margin-top: 10px;
+        font-size: 16px;
+        color: #c7c7c7;
+        line-height: 1.6;
+      }
+
+      /* 右側 */
+      .song-list {
+        background: #1a1d24;
+        border-radius: 16px;
+        padding: 16px;
+        max-height: 700px;
+        overflow-y: auto;
+      }
+
+      /* 卡片 */
+      .card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #242933;
+        padding: 10px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        transition: 0.2s;
+        cursor: pointer;
+      }
+
+      .card:hover {
+        background: #323847;
+      }
+
+      /* 紫色高亮 */
+      .card.active {
+        background: #2f2a3f;
+        border: 1px solid #b46bff;
+        box-shadow: 0 0 12px rgba(180, 107, 255, 0.35);
+      }
+
+      /* 左區 */
+      .card-left {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      /* 縮圖 */
+      .thumb {
+        width: 80px;
+        height: 45px;
+        border-radius: 6px;
+        object-fit: cover;
+      }
+
+      /* 文字 */
+      .card-title {
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      .card-sub {
+        font-size: 12px;
+        color: #b5b5b5;
+      }
+
+      .card-time {
+        font-size: 12px;
+        color: #888;
+        margin-top: 4px;
+      }
+
+      /* YouTube icon button */
+      .yt-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        opacity: 0.85;
+        transition: 0.2s;
+      }
+
+      .yt-btn:hover {
+        opacity: 1;
+        transform: scale(1.15);
+        filter: drop-shadow(0 0 6px rgba(180, 107, 255, 0.6));
+      }
+
+      .yt-btn img {
+        width: 26px;
+        height: 26px;
+      }
+
+      /* 手機版 */
+      @media (max-width: 768px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="title">
+          🎤 【深夜歌回】睡不著嗎 ? 我陪你 【紫羅傘雨夜／芥川組】
+        </div>
+
+        <div class="subtitle">PRISM Musical Archive</div>
+      </div>
+
+      <div class="layout">
+        <!-- 左播放器 -->
+        <div class="player-box">
+          <div id="player"></div>
+
+          <div class="now-playing" id="nowTitle">🎵 點擊右側卡片播放</div>
+
+          <div class="notice">
+            ⚠️ 點擊卡片 → 左側播放<br />
+            ⚠️ 點擊 YouTube 圖示 → 直接跳轉 YouTube（含時間點）
+          </div>
+        </div>
+
+        <!-- 右歌單 -->
+        <div class="song-list" id="list"></div>
+      </div>
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <script>
+      const data = {
+        videoId: "zjeTBNMxX7M", //https://www.youtube.com/live/zjeTBNMxX7M
+
+        songs: [
+          {
+            title: "Second Love挿入歌-白い季節",
+            artist: "MISIA",
+            time: 466, //秒
+          },
+
+          {
+            title: "歌劇魅影-The Phantom of the Opera",
+            artist: "Andrew Lloyd Webber ",
+            time: 1130,
+          },
+
+          {
+            title: "Counting Stars",
+            artist: "OneRepublic",
+            time: 1656,
+          },
+
+          {
+            title: "メリーゴーランド",
+            artist: "優里",
+            time: 2196,
+          },
+
+          {
+            title: "寧夏",
+            artist: "梁靜茹",
+            time: 2581,
+          },
+
+          {
+            title: "Lilas (86―エイティシックス― シーズン2-ED)",
+            artist: "SawanoHiroyuki[nZk]:Honoka Takahashi",
+            time: 2981,
+          },
+
+          {
+            title: "七里香",
+            artist: "周杰倫",
+            time: 3440,
+          },
+
+          {
+            title: "他一定很愛你",
+            artist: "阿杜",
+            time: 4012,
+          },
+
+          {
+            title: "星火",
+            artist: "DAOKO & 米津玄師",
+            time: 4410,
+          },
+
+          {
+            title: "残酷な天使のテーゼ",
+            artist: "高橋洋子",
+            time: 4983,
+          },
+
+          {
+            title: "是什麼讓我遇見這樣的你",
+            artist: "白安",
+            time: 5377,
+          },
+
+          {
+            title: "初音ミク&巡音ルカ-Magnet",
+            artist: "minato（流星P）",
+            time: 6075,
+          },
+
+          {
+            title: "暖心",
+            artist: "郁可唯",
+            time: 6622,
+          },
+
+          {
+            title: "愛して愛して愛して",
+            artist: "きくお feat. 初音ミク",
+            time: 7070,
+          },
+
+          {
+            title: "崴孟三百天禮物",
+            artist: "崴崴孟孟",
+            time: 7582,
+          },
+
+          {
+            title: "告白氣球",
+            artist: "周杰倫",
+            time: 8376,
+          },
+
+          {
+            title: "千年之戀",
+            artist: "F.I.R.",
+            time: 8731,
+          },
+
+          {
+            title: "離島之歌",
+            artist: "田馥甄",
+            time: 9295,
+          },
+
+          {
+            title: "小情歌",
+            artist: "蘇打綠",
+            time: 9842,
+          },
+
+          {
+            title: "在加納共和國離婚",
+            artist: "DIOR大穎&菲道爾",
+            time: 10567,
+          },
+
+          {
+            title: "私奔到月球",
+            artist: "五月天＆陳綺貞 ",
+            time: 11037,
+          },
+
+          {
+            title: "怪獣の花唄",
+            artist: "Vaundy",
+            time: 11834,
+          },
+
+          {
+            title: "雨櫻花",
+            artist: "F.I.R.",
+            time: 12148,
+          },
+
+          {
+            title: "我喜歡妳",
+            artist: "派偉俊",
+            time: 12550,
+          },
+        ],
+      };
+
+      let player;
+
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player("player", {
+          videoId: data.videoId,
+
+          playerVars: {
+            autoplay: 0,
+            rel: 0,
+          },
+        });
+      }
+
+      const list = document.getElementById("list");
+      const nowTitle = document.getElementById("nowTitle");
+
+      function formatTime(s) {
+        const h = Math.floor(s / 3600);
+        const m = Math.floor((s % 3600) / 60);
+        const sec = s % 60;
+
+        return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+      }
+
+      function setActive(index) {
+        document.querySelectorAll(".card").forEach((el, i) => {
+          el.classList.toggle("active", i === index);
+        });
+      }
+
+      function playSong(song, index) {
+        nowTitle.innerText = `🎵 ${song.title} - ${song.artist}`;
+
+        setActive(index);
+
+        if (player) {
+          player.seekTo(song.time, true);
+          player.playVideo();
+        }
+      }
+
+      function openYT(song) {
+        const url = `https://www.youtube.com/watch?v=${data.videoId}&t=${song.time}s`;
+
+        window.open(url, "_blank");
+      }
+
+      data.songs.forEach((song, index) => {
+        const div = document.createElement("div");
+
+        div.className = "card";
+
+        div.innerHTML = `
+
+    <div class="card-left">
+
+      <img class="thumb"
+        src="https://img.youtube.com/vi/${data.videoId}/hqdefault.jpg" />
+
+      <div>
+
+        <div class="card-title">
+          🎵 ${song.title}
+        </div>
+
+        <div class="card-sub">
+          ${song.artist}
+        </div>
+
+        <div class="card-time">
+          ${formatTime(song.time)}
+        </div>
+
+      </div>
+
+    </div>
+
+    <button class="yt-btn">
+      <img src="https://www.iconpacks.net/icons/2/free-youtube-logo-icon-2431-thumb.png" />
+    </button>
+
+  `;
+
+        // 左側播放
+        div.onclick = () => playSong(song, index);
+
+        // YouTube跳轉
+        div.querySelector(".yt-btn").onclick = (e) => {
+          e.stopPropagation();
+          openYT(song);
+        };
+
+        list.appendChild(div);
+      });
+    </script>
+  </body>
+</html>
